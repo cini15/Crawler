@@ -14,9 +14,7 @@ class WebCrawlerTest {
     void seedStatistic() {
     }
 
-    @Test
-    void getStatistic() {
-    }
+
 
     @Test
     void getFiveBestSeeds() {
