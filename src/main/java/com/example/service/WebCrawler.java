@@ -3,22 +3,19 @@ package com.example.service;
 import com.example.files.Configuration;
 import com.example.parser.HtmlParser;
 
-import java.io.BufferedReader;
+import javax.swing.text.html.HTML;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URL;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class WebCrawler {
     private HtmlParser parser =null;
     private Configuration conf=null;
+    private Map<String, List<Integer>> statistic;
 
     public WebCrawler() {
         parser= new HtmlParser();
@@ -27,23 +24,39 @@ public class WebCrawler {
 
     public void seedStatistic() throws IOException, InterruptedException {
         conf.init();
-        Map<String, List<Integer>> statistic = new HashMap<>();
+        statistic = new HashMap<>();
         parser.setTerms(conf.getTerms());
-        List<String> seeds = conf.getSeeds();
         List<Integer> numbers;
-        for (String seed : seeds) {
-            loadHtml(seed);
-            numbers= parser.parse(seed);
+        for (String seed : conf.getSeeds()) {
+            numbers= parser.parse(loadHtml(seed));
             statistic.put(seed,numbers);
         }
-
     }
+
+    public Map<String, List<Integer>> getStatistic() {
+        return statistic;
+    }
+
+    public Map<String,List<Integer>> getFiveBestSeeds(){
+       return statistic.entrySet()
+                .stream()
+                .sorted((e1,e2)->Integer.compare(e2.getValue().get(e2.getValue().size()-1),
+                        e1.getValue().get(e1.getValue().size()-1)))
+               .limit(5)
+                .collect(Collectors.toMap(Map.Entry::getKey,Map.Entry::getValue,(e1,e2)->e1, LinkedHashMap::new));
+    }
+
+    public List<String> getTerms(){
+        return conf.getTerms();
+    }
+
     private String loadHtml(String url) throws IOException, InterruptedException {
         String html=null;
         HttpClient client=HttpClient.newHttpClient();
         HttpRequest request=HttpRequest.newBuilder(URI.create(url)).build();
         HttpResponse<String> response= client.send(request, HttpResponse.BodyHandlers.ofString());
         html= response.body();
+        HTML html1= new HTML();
 
         return html;
     }

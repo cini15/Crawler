@@ -6,7 +6,6 @@ import java.util.List;
 public class Configuration {
     private List<String> seeds;
     private List<String> terms;
-    private Integer seedsCount;
 
     public Configuration() {
         this.seeds = new ArrayList<>();
@@ -15,10 +14,15 @@ public class Configuration {
 
     public void init() {
         seeds.add("https://en.wikipedia.org/wiki/Elon_Musk");
+        seeds.add("https://en.wikipedia.org/wiki/SpaceX");
+        seeds.add("https://en.wikipedia.org/wiki/Tesla,_Inc.");
+        seeds.add("https://en.wikipedia.org/wiki/The_Boring_Company");
+        seeds.add("https://en.wikipedia.org/wiki/Neuralink");
         terms.add("Tesla");
         terms.add("Musk");
+        terms.add("Elon Musk");
 
-        seedsCount=seeds.size();
+
     }
 
     public List<String> getSeeds() {
@@ -30,6 +34,6 @@ public class Configuration {
     }
 
     public Integer getSeedsCount() {
-        return seedsCount;
+        return seeds.size();
     }
 }
