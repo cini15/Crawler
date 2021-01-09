@@ -30,7 +30,6 @@ class WebCrawlerTest {
         Map<String, List<Integer>> statistic = web.getStatistic();
         Map<String, List<Integer>> fiveBestSeeds = web.getFiveBestSeeds();
 
-        System.out.println(web.getTerms());
         System.out.println(statistic.toString());
         System.out.println(fiveBestSeeds);
 

@@ -17,22 +17,23 @@ public class WebCrawler {
     private final HtmlParser parser;
     private final Configuration conf;
     private Map<String, List<Integer>> statistic;
+    private final Integer defDepth = 8;
+    private final Integer maxDepth = 10000;
+    private int currentDepth;
+
 
     public WebCrawler() {
         parser = new HtmlParser();
         conf = new Configuration();
+        currentDepth = defDepth;
     }
 
     public void seedStatistic() throws IOException, InterruptedException {
         conf.init();
         statistic = new HashMap<>();
         parser.setTerms(conf.getTerms());
-        List<Integer> numbers;
-        for (String seed : conf.getSeeds()) {
-            numbers = parser.parse(loadHtml(seed));
-            statistic.put(seed, numbers);
-        }
-        ResultStatistic result= new ResultStatistic();
+        statistic.putAll(parser.parse(conf.getSeed(), currentDepth));
+        ResultStatistic result = new ResultStatistic();
         result.writeStatistic(statistic);
     }
 
@@ -49,14 +50,12 @@ public class WebCrawler {
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
     }
 
-    public List<String> getTerms() {
-        return conf.getTerms();
+
+    public void setCurrentDepth(int currentDepth) {
+        this.currentDepth = currentDepth;
     }
 
-    private String loadHtml(String url) throws IOException, InterruptedException {
-        HttpClient client = HttpClient.newHttpClient();
-        HttpRequest request = HttpRequest.newBuilder(URI.create(url)).build();
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        return  response.body();
+    public int getCurrentDepth() {
+        return currentDepth;
     }
 }

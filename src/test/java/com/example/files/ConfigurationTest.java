@@ -10,8 +10,7 @@ class ConfigurationTest {
     void init() {
         Configuration configuration=new Configuration();
         configuration.init();
-        configuration.getSeeds().forEach(System.out::println);
-        configuration.getTerms().forEach(System.out::println);
+        System.out.println(configuration.getSeed()+ " : "+configuration.getTerms().toString());
     }
 
     @Test
