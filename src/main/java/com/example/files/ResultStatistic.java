@@ -43,4 +43,8 @@ public class ResultStatistic {
                 .collect(Collectors.toList());
     }
 
+    public String getFileName() {
+        return fileName;
+    }
+
 }

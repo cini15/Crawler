@@ -1,11 +1,17 @@
 package com.example.files;
 
+import java.io.*;
+import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class Configuration {
-    private List<String> seeds;
+    private  List<String> seeds;
     private List<String> terms;
+    private final String configSeeds= "/config.csv";
 
     public Configuration() {
         this.seeds = new ArrayList<>();
@@ -13,16 +19,24 @@ public class Configuration {
     }
 
     public void init() {
-        seeds.add("https://en.wikipedia.org/wiki/Elon_Musk");
-        seeds.add("https://en.wikipedia.org/wiki/SpaceX");
-        seeds.add("https://en.wikipedia.org/wiki/Tesla,_Inc.");
-        seeds.add("https://en.wikipedia.org/wiki/The_Boring_Company");
-        seeds.add("https://en.wikipedia.org/wiki/Neuralink");
-        terms.add("Tesla");
-        terms.add("Musk");
-        terms.add("Elon Musk");
+        loadFromFileConfig(configSeeds);
 
+    }
 
+    private void loadFromFileConfig(String configSeeds) {
+        InputStream input=Configuration.class.getResourceAsStream(configSeeds);
+        List<String> list = new BufferedReader(new InputStreamReader(input)).lines().collect(Collectors.toList());
+        terms= list.stream()
+                .limit(1)
+                .flatMap(s ->
+                        Arrays.stream(s.split(","))
+                                .map(p->p.replaceAll("\"",""))
+                        ).collect(Collectors.toList());
+        seeds= list.stream()
+                .skip(1)
+                .map(s ->
+                        s.replaceAll("\"",""))
+                .collect(Collectors.toList());
     }
 
     public List<String> getSeeds() {

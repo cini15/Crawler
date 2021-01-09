@@ -1,6 +1,7 @@
 package com.example.service;
 
 import com.example.files.Configuration;
+import com.example.files.ResultStatistic;
 import com.example.parser.HtmlParser;
 
 import javax.swing.text.html.HTML;
@@ -31,6 +32,8 @@ public class WebCrawler {
             numbers = parser.parse(loadHtml(seed));
             statistic.put(seed, numbers);
         }
+        ResultStatistic result= new ResultStatistic();
+        result.writeStatistic(statistic);
     }
 
     public Map<String, List<Integer>> getStatistic() {
