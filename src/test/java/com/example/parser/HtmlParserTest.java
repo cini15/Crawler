@@ -3,6 +3,7 @@ package com.example.parser;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -18,19 +19,17 @@ class HtmlParserTest {
         String exp="https://en.wikipedia.org/wiki/Elon_Musk";
 
         HtmlParser parser=new HtmlParser();
-        parser.setTerms(List.of("Tesla","Musk"));
+        parser.setTerms(List.of("Tesla","Musk","Elon Musk"));
+
         Map<String, List<Integer>> list = parser.parse(exp, 20);
-        for (String keq:list.keySet()
-             ) {
-            System.out.println(keq+ " : "+ list.get(keq));
-        }
+
     }
 
     @Test
     void countOfTerm() throws IOException, InterruptedException {
         HtmlParser parser = new HtmlParser();
 
-        Set<String> list = parser.listOfHrefs("https://en.wikipedia.org/wiki/Elon_Musk");
+        List<String> list = parser.listOfHrefs("https://en.wikipedia.org/wiki/Elon_Musk");
 
     }
 }

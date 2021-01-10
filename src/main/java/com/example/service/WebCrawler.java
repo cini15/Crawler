@@ -52,6 +52,8 @@ public class WebCrawler {
 
 
     public void setCurrentDepth(int currentDepth) {
+        if (currentDepth > maxDepth | currentDepth <= 1)
+            throw new IllegalArgumentException("count of depth is dig (maxCount=" + maxDepth + ", min=1, def=" + defDepth);
         this.currentDepth = currentDepth;
     }
 

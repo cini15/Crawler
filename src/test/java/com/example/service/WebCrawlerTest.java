@@ -21,17 +21,13 @@ class WebCrawlerTest {
         WebCrawler web = new WebCrawler();
         try {
             web.seedStatistic();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
 
         Map<String, List<Integer>> statistic = web.getStatistic();
         Map<String, List<Integer>> fiveBestSeeds = web.getFiveBestSeeds();
 
-        System.out.println(statistic.toString());
-        System.out.println(fiveBestSeeds);
 
     }
 }

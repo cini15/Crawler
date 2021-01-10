@@ -10,7 +10,6 @@ class ConfigurationTest {
     void init() {
         Configuration configuration=new Configuration();
         configuration.init();
-        System.out.println(configuration.getSeed()+ " : "+configuration.getTerms().toString());
     }
 
     @Test
