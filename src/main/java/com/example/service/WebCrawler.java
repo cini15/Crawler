@@ -21,15 +21,30 @@ public class WebCrawler {
     private final Integer maxDepth = 10000;
     private int currentDepth;
 
-
     public WebCrawler() {
         parser = new HtmlParser();
         conf = new Configuration();
+        conf.init();
         currentDepth = defDepth;
     }
 
-    public void seedStatistic() throws IOException, InterruptedException {
-        conf.init();
+    public WebCrawler(String[] args) {
+        parser = new HtmlParser();
+        conf = new Configuration();
+//        conf.init();
+        currentDepth = defDepth;
+        if (args != null & args.length>1) {
+            conf.init(args[0]);
+            if (args.length ==2) {
+                setCurrentDepth(Integer.parseInt(args[1]));
+            }
+        } else {
+            conf.init();
+        }
+    }
+
+    public void seedStatistic() {
+
         statistic = new HashMap<>();
         parser.setTerms(conf.getTerms());
         statistic.putAll(parser.parse(conf.getSeed(), currentDepth));
@@ -41,19 +56,19 @@ public class WebCrawler {
         return statistic;
     }
 
-    public Map<String, List<Integer>> getFiveBestSeeds() {
+    public Map<String, List<Integer>> getTenBestSeeds() {
         return statistic.entrySet()
                 .stream()
                 .sorted((e1, e2) -> Integer.compare(e2.getValue().get(e2.getValue().size() - 1),
                         e1.getValue().get(e1.getValue().size() - 1)))
-                .limit(5)
+                .limit(10)
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
     }
 
 
     public void setCurrentDepth(int currentDepth) {
         if (currentDepth > maxDepth | currentDepth <= 1)
-            throw new IllegalArgumentException("count of depth is dig (maxCount=" + maxDepth + ", min=1, def=" + defDepth);
+            throw new IllegalArgumentException("count of depth = "+currentDepth+" (maxCount=" + maxDepth + ", min=1, def=" + defDepth+")");
         this.currentDepth = currentDepth;
     }
 

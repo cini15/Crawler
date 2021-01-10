@@ -10,17 +10,8 @@ class ConfigurationTest {
     void init() {
         Configuration configuration=new Configuration();
         configuration.init();
+        assertFalse(configuration.getSeed().isEmpty());
+        assertFalse(configuration.getTerms().isEmpty());
     }
 
-    @Test
-    void getSeeds() {
-    }
-
-    @Test
-    void getTerms() {
-    }
-
-    @Test
-    void getSeedsCount() {
-    }
 }
