@@ -21,6 +21,7 @@ public class HtmlParser {
     HttpClient client = HttpClient.newHttpClient();
     CompletableFuture<List<Integer>> future;
 
+
     public void setTerms(List<String> terms) {
         this.terms = terms;
     }
@@ -31,6 +32,7 @@ public class HtmlParser {
         strings.addAll(listOfHrefs(seed));
 //        List<CompletableFuture> futures = new ArrayList<>();
         int count = 0;
+
         for (String href : strings) {
             if (count >= currentDepth) {
 //                CompletableFuture
@@ -50,7 +52,7 @@ public class HtmlParser {
                 count++;
             }
         }
-        strings.forEach(s -> parse(s, currentDepth-strings.size()));
+        strings.forEach(s -> parse(s, currentDepth - strings.size()));
         return statistic;
     }
 
@@ -79,10 +81,9 @@ public class HtmlParser {
         String responseBody;
         try {
             responseBody = loadHtml(seed);
-            Matcher matcher = Pattern.compile("\"(https?://.*?(?!.img))\"").matcher(responseBody);
+            Matcher matcher = Pattern.compile("\"(https?://.*?)(?!/https://.*?)(?!png)(?!img)(?!ico)\"").matcher(responseBody);
             while (matcher.find()) {
                 hrefs.add(matcher.group(1));
-                System.out.println(matcher.group(1));
             }
         } catch (IOException | InterruptedException e) {
 //            e.printStackTrace();
@@ -92,7 +93,9 @@ public class HtmlParser {
     }
 
     public List<Integer> countOfTerm(String seed) throws IOException, InterruptedException {
-        String responseBody = loadHtml(seed);
+        String responseBody = "";
+
+        responseBody = loadHtml(seed);
         List<Integer> countTerms = new ArrayList<>();
         for (String term : terms) {
             Integer count = 0;
@@ -109,11 +112,11 @@ public class HtmlParser {
 
     private String loadHtml(String url) throws IOException, InterruptedException {
 
-        HttpRequest request = HttpRequest.newBuilder(URI.create(url)).timeout(Duration.ofSeconds(2)).build();
+        HttpRequest request = HttpRequest.newBuilder(URI.create(url)).build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-//        CompletableFuture<HttpResponse<String>> response = client.sendAsync(request, HttpResponse.BodyHandlers.ofString());
+        if (response.statusCode()==200)
         return response.body();
+        return "";
 //        URL oracle = new URL(url);
 //        BufferedReader in = new BufferedReader(
 //                new InputStreamReader(oracle.openStream()));
@@ -121,7 +124,6 @@ public class HtmlParser {
 //        String inputLine = "";
 //        StringBuilder builder = new StringBuilder();
 //        while ((inputLine = in.readLine()) != null)
-////            System.out.println(inputLine); //Можно//  накапливать в StringBuilder а потом присвоить перемной String результат накопления
 //            builder.append(inputLine);
 //            in.close();
 //        return builder.toString();
