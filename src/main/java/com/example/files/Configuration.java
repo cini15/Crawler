@@ -9,8 +9,6 @@ import java.util.stream.Collectors;
 public class Configuration {
     private String seed;
     private List<String> terms;
-    private final String configSeeds = "\\config.csv";
-    private Path pathConfig;
 
     public Configuration() {
     }
@@ -31,19 +29,12 @@ public class Configuration {
     }
 
     public void init() {
-        File file = new File(this.getClass().getResource(configSeeds).getPath());
-        pathConfig = file.toPath();
-        String strings = loadFromFileConfig();
+        String strings = loadDefConfig();
         init(strings);
     }
 
-    private String loadFromFileConfig() {
-        try {
-            return Files.readAllLines(pathConfig).get(0);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
+    private String loadDefConfig() {
+        return "\"https://en.wikipedia.org/wiki/Elon_Musk\",\"Tesla\",\"Musk\",\"Elon Musk\"";
     }
 
     public String getSeed() {

@@ -30,6 +30,9 @@ class HtmlParserTest {
         Map<String, List<Integer>> map = parser.parse(exp, 20);
         assertFalse(map.isEmpty());
         assertEquals(4, map.get(exp).size());
+        for (String k:map.keySet()) {
+            System.out.println(k+" : "+ map.get(k));
+        }
     }
 
     @Test
